@@ -28,7 +28,7 @@ targets:
 To generate theme you have to create a `[name].theme` file somewhere in your `/lib` folder.
 This file contains JSON text which will be converted to a dart file.
 
-It should something like this:
+It should look something like this:
 
 ```yaml
 {
