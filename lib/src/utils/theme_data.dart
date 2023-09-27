@@ -49,7 +49,7 @@ class ThemeDataClass {
 
   static ThemeDataClass parse(Map<String, dynamic> data) {
     String name = data["name"];
-    List<dynamic> colors = data["colors"];
+    List<dynamic> colors = data["color_fields"];
     List<String> stringColors = colors.map((e) => e.toString()).toList();
     return ThemeDataClass(className: name, colors: stringColors);
   }
