@@ -9,7 +9,7 @@ abstract class AppTheme {
 
 class DarkTheme extends AppThemeData {
   DarkTheme._()
-    : super(
+      : super(
           background: Colors.black,
           primary: Colors.blue,
           error: Colors.red,
@@ -20,7 +20,7 @@ class DarkTheme extends AppThemeData {
 
 class LightTheme extends AppThemeData {
   LightTheme._()
-    : super(
+      : super(
           background: Colors.white,
           primary: Colors.green,
           error: Colors.red,
@@ -31,7 +31,7 @@ class LightTheme extends AppThemeData {
 
 class Halloween extends AppThemeData {
   Halloween._()
-    : super(
+      : super(
           background: Colors.black,
           primary: Colors.orange,
           error: Colors.red,
@@ -42,7 +42,7 @@ class Halloween extends AppThemeData {
 
 class XMasTheme extends AppThemeData {
   XMasTheme._()
-    : super(
+      : super(
           background: Colors.white,
           primary: const Color(0xFFFF0000),
           error: const Color(0xFF00FF00),
@@ -96,4 +96,3 @@ extension _ColorLerpExtension on Color {
     return Color.lerp(this, to, t)!;
   }
 }
-

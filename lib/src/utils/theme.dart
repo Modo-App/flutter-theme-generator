@@ -14,7 +14,7 @@ class ThemeClass {
     StringBuffer buffer = StringBuffer();
     buffer.writeln("class $className extends $themeDataClassName {");
     buffer.writeln("  $className._()");
-    buffer.writeln("    : super(");
+    buffer.writeln("      : super(");
 
     colors.forEach((key, value) {
       buffer.writeln("          $key: ${_parseColor(value)},");
