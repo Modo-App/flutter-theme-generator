@@ -1,0 +1,54 @@
+{
+  "theme_name": "AppTheme",
+  "theme_data": {
+    "name": "AppThemeData",
+    "color_fields": [
+      "background",
+      "primary",
+      "error"
+    ]
+  },
+  "themes": {
+    "DarkTheme": {
+      "name": "dark",
+      "is_dark": true,
+      "colors": {
+        "background": "black",
+        "primary": "blue",
+        "error": "red"
+      }
+    },
+    "LightTheme": {
+      "name": "light",
+      "colors": {
+        "background": "white",
+        "primary": "green",
+        "error": "red"
+      }
+    },
+    "Halloween": {
+      "name": "halloween",
+      "is_dark": true,
+      "colors": {
+        "background": "black",
+        "primary": "orange",
+        "error": "red"
+      }
+    },
+    "XMasTheme": {
+      "name": "xmas",
+      "is_dark": false,
+      "colors": {
+        "background": "white",
+        "primary": "#FFFF0000",
+        "error": "0xFF00FF00"
+      }
+    }
+  },
+  "extensions": {
+    "buildContext": {
+      "enabled": true,
+      "getter_name": "theme"
+    }
+  }
+}

@@ -1,3 +1,9 @@
+targets:
+  theme_generator:theme_generator:
+    builders:
+      theme_generator|themeBuilder:
+        enabled: True
+
 builders:
   themeBuilder:
     import: 'package:theme_generator/theme_generator.dart'
