@@ -59,6 +59,12 @@ It should something like this:
         "error": "#FFFF0000"
       }
     }
+  },
+  "extensions": {
+    "buildContext": {
+      "enabled": true,
+      "field_name": "appTheme"
+    }
   }
 }
 ```
@@ -81,6 +87,24 @@ use `dart run build_runner watch`to automatically regenerate the dart file if yo
 | name         | The class name for the flutter `ThemeExtension`                                                                            | String      |
 | color_fields | A list of flutter `Color` fields which can be accessed in your theme.<br>Each string in this list represents a field name. | String list |
 
+### extensions
+
+The generator has also the option to add extensions, which allow you an easier access to your themes using build
+context. To use this, just add an object called `extensions` to your `.theme` file.
+
+| Value        | Description                                                                   | Type |
+|--------------|-------------------------------------------------------------------------------|------|
+| buildContext | This extension gives you an easier access to your themes using `BuildContext` | Map  |
+
+#### buildContext - extension
+
+The buildContext extension is turned off by default. This extension needs at least one theme to be generated.
+
+| Value      | Description                                                                          | Type    |
+|------------|--------------------------------------------------------------------------------------|---------|
+| enabled    | When set to true, the extension will be generated. Defaults to `false`.              | boolean |
+| field_name | The fieldName to access your themes through the `BuildContext`. Defaults to `theme`. | String  |
+
 ### themes
 
 To create a new theme, you have to add a new object to the `themes` map. The key of this object will be the name of the
@@ -94,7 +118,7 @@ The object should have following key-value pairs:
 | is_dark \<Optional> | If this is set to true, the generator will use a `ThemeData.dark()` as a template, otherwise it will use `ThemeData.light()` as a template. | boolean |
 | colors              | This map will contain the `Color` field name with the associated color value.                                                               | Map     |
 
-### colors
+#### colors - themes
 
 Example `colors` map for the `theme` object.
 
@@ -118,12 +142,14 @@ access fields from the flutter `Colors` class.
 ```dart
 import 'package:flutter/material.dart';
 
-abstract class ModoTheme {
+abstract class AppTheme {
   static final dark = ThemeData.dark().copyWith(extensions: [DarkTheme.get]);
   static final light = ThemeData.light().copyWith(extensions: [LightTheme.get]);
+  static final halloween = ThemeData.dark().copyWith(extensions: [Halloween.get]);
+  static final xmas = ThemeData.light().copyWith(extensions: [XMasTheme.get]);
 }
 
-class DarkTheme extends ModoThemeData {
+class DarkTheme extends AppThemeData {
   DarkTheme._()
       : super(
     background: Colors.black,
@@ -134,19 +160,41 @@ class DarkTheme extends ModoThemeData {
   static final get = DarkTheme._();
 }
 
-class LightTheme extends ModoThemeData {
+class LightTheme extends AppThemeData {
   LightTheme._()
       : super(
     background: Colors.white,
-    primary: const Color(0xFF00FF00),
-    error: const Color(0xFFFF0000),
+    primary: Colors.green,
+    error: Colors.red,
   );
 
   static final get = LightTheme._();
 }
 
-class ModoThemeData extends ThemeExtension<ModoThemeData> {
-  const ModoThemeData({
+class Halloween extends AppThemeData {
+  Halloween._()
+      : super(
+    background: Colors.black,
+    primary: Colors.orange,
+    error: Colors.red,
+  );
+
+  static final get = Halloween._();
+}
+
+class XMasTheme extends AppThemeData {
+  XMasTheme._()
+      : super(
+    background: Colors.white,
+    primary: const Color(0xFFFF0000),
+    error: const Color(0xFF00FF00),
+  );
+
+  static final get = XMasTheme._();
+}
+
+class AppThemeData extends ThemeExtension<AppThemeData> {
+  const AppThemeData({
     required this.background,
     required this.primary,
     required this.error,
@@ -157,29 +205,32 @@ class ModoThemeData extends ThemeExtension<ModoThemeData> {
   final Color error;
 
   @override
-  ThemeExtension<ModoThemeData> copyWith({
+  ThemeExtension<AppThemeData> copyWith({
     Color? background,
     Color? primary,
     Color? error,
   }) =>
-      ModoThemeData(
+      AppThemeData(
         background: background ?? this.background,
         primary: primary ?? this.primary,
         error: error ?? this.error,
       );
 
   @override
-  ThemeExtension<ModoThemeData> lerp(covariant ThemeExtension<ModoThemeData>? other, double t) {
-    if (other is! ModoThemeData) {
+  ThemeExtension<AppThemeData> lerp(covariant ThemeExtension<AppThemeData>? other, double t) {
+    if (other is! AppThemeData) {
       return this;
     }
-    return ModoThemeData(
+    return AppThemeData(
       background: background.lerp(other.background, t),
       primary: primary.lerp(other.primary, t),
       error: error.lerp(other.error, t),
     );
   }
+}
 
+extension BuildContextExtensions on BuildContext {
+  AppThemeData get appTheme => Theme.of(this).extension<AppThemeData>() ?? DarkTheme.get;
 }
 
 extension _ColorLerpExtension on Color {
@@ -188,4 +239,5 @@ extension _ColorLerpExtension on Color {
   }
 }
 ```
+
 </details>

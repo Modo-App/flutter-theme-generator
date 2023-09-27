@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:build/build.dart';
-import 'package:theme_generator/src/utils/theme_class_generator.dart';
+import 'package:theme_generator/src/utils/extensions.dart';
 import 'package:theme_generator/src/utils/theme.dart';
+import 'package:theme_generator/src/utils/theme_class_generator.dart';
 import 'package:theme_generator/src/utils/theme_data.dart';
 
 class ThemeBuilder implements Builder {
@@ -20,8 +21,9 @@ class ThemeBuilder implements Builder {
     String themeClassName = data["theme_name"] ?? "AppTheme";
     ThemeDataClass themeData = ThemeDataClass.parse(data["theme_data"]);
     List<ThemeClass> themes = ThemeClass.parseThemes(data["themes"]);
+    Extensions extensions = Extensions.parse(data["extensions"] ?? {}, themes);
 
-    await buildStep.writeAsString(output, _generateFile(themeClassName, themeData, themes));
+    await buildStep.writeAsString(output, _generateFile(themeClassName, themeData, themes, extensions));
   }
 
   @override
@@ -29,7 +31,8 @@ class ThemeBuilder implements Builder {
         ".theme": [".theme.dart"]
       };
 
-  String _generateFile(String themeClassName, ThemeDataClass themeData, List<ThemeClass> themes) {
+  String _generateFile(
+      String themeClassName, ThemeDataClass themeData, List<ThemeClass> themes, Extensions extensions) {
     StringBuffer buffer = StringBuffer();
     buffer.writeln("import 'package:flutter/material.dart';");
     buffer.writeln();
@@ -38,13 +41,8 @@ class ThemeBuilder implements Builder {
       buffer.writeln(theme.generateThemeClass(themeData.className));
     }
     buffer.writeln(themeData.generateClass());
-    buffer.writeln("""
-extension _ColorLerpExtension on Color {
-  Color lerp(Color to, double t) {
-    return Color.lerp(this, to, t)!;
-  }
-}
-""");
+    extensions.generateBuildContextExtension(buffer, themes, themeData);
+    buffer.writeln(extensions.generateColorExtension());
     return buffer.toString();
   }
 }

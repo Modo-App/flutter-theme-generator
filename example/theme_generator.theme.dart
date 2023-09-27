@@ -85,7 +85,10 @@ class AppThemeData extends ThemeExtension<AppThemeData> {
       error: error.lerp(other.error, t),
     );
   }
+}
 
+extension BuildContextExtensions on BuildContext {
+  AppThemeData get appTheme => Theme.of(this).extension<AppThemeData>() ?? DarkTheme.get;
 }
 
 extension _ColorLerpExtension on Color {

@@ -48,7 +48,7 @@
   "extensions": {
     "buildContext": {
       "enabled": true,
-      "getter_name": "theme"
+      "field_name": "appTheme"
     }
   }
 }

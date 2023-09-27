@@ -9,23 +9,23 @@ class ThemeDataClass {
 
     buffer.writeln("class $className extends ThemeExtension<$className> {");
     buffer.writeln("  const $className({");
-    for(var color in colors) {
+    for (var color in colors) {
       buffer.writeln("    required this.$color,");
     }
     buffer.writeln("  });");
     buffer.writeln();
-    for(var color in colors) {
+    for (var color in colors) {
       buffer.writeln("  final Color $color;");
     }
     buffer.writeln();
     buffer.writeln("  @override");
     buffer.writeln("  ThemeExtension<$className> copyWith({");
-    for(var color in colors) {
+    for (var color in colors) {
       buffer.writeln("    Color? $color,");
     }
     buffer.writeln("  }) =>");
     buffer.writeln("      $className(");
-    for(var color in colors) {
+    for (var color in colors) {
       buffer.writeln("        $color: $color ?? this.$color,");
     }
     buffer.writeln("      );");
@@ -36,12 +36,11 @@ class ThemeDataClass {
     buffer.writeln("      return this;");
     buffer.writeln("    }");
     buffer.writeln("    return $className(");
-    for(var color in colors) {
+    for (var color in colors) {
       buffer.writeln("      $color: $color.lerp(other.$color, t),");
     }
     buffer.writeln("    );");
     buffer.writeln("  }");
-    buffer.writeln();
     buffer.writeln("}");
 
     return buffer.toString();
