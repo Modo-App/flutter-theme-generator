@@ -1,0 +1,7 @@
+builders:
+  themeBuilder:
+    import: 'package:theme_generator/theme_generator.dart'
+    builder_factories: ['themeBuilder']
+    build_extensions: {".theme": [".theme.dart"]}
+    build_to: source
+    auto_apply: dependents
