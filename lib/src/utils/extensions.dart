@@ -5,12 +5,12 @@ class Extensions {
   const Extensions._({
     this.buildContextEnabled = false,
     this.buildContextFieldName = "theme",
-    this.themeResponsiveEnabled = false,
+    this.themeResponsiveWidgetEnabled = true,
   });
 
   final bool buildContextEnabled;
   final String buildContextFieldName;
-  final bool themeResponsiveEnabled;
+  final bool themeResponsiveWidgetEnabled;
 
   void generateBuildContextExtension(
     StringBuffer buffer,
@@ -41,18 +41,18 @@ extension _ColorLerpExtension on Color {
   }
 
   void generateImports(StringBuffer buffer) {
-    if (!themeResponsiveEnabled) return;
+    if (!themeResponsiveWidgetEnabled) return;
     buffer.writeln("import 'package:provider/provider.dart';");
   }
 
   void generateTypeDefs(StringBuffer buffer) {
-    if (!themeResponsiveEnabled) return;
+    if (!themeResponsiveWidgetEnabled) return;
     buffer.writeln("typedef ThemeBuilder = Widget Function(BuildContext context, ThemeData currentTheme);");
     buffer.writeln();
   }
 
   void generateThemeResponsiveWidget(StringBuffer buffer, String themeClassName) {
-    if (!themeResponsiveEnabled) return;
+    if (!themeResponsiveWidgetEnabled) return;
     buffer.writeln("""
 class ThemeResponsive extends StatelessWidget {
   final ThemeBuilder builder;
@@ -81,11 +81,11 @@ class ThemeResponsive extends StatelessWidget {
 
     bool buildContextEnabled = buildContext["enabled"] ?? false;
     String buildContextFieldName = buildContext["field_name"] ?? "theme";
-    bool themeResponsiveEnabled = themeResponsiveWidget["enabled"] ?? false;
+    bool themeResponsiveWidgetEnabled = themeResponsiveWidget["enabled"] ?? true;
     return Extensions._(
       buildContextEnabled: buildContextEnabled,
       buildContextFieldName: buildContextFieldName,
-      themeResponsiveEnabled: themeResponsiveEnabled,
+      themeResponsiveWidgetEnabled: themeResponsiveWidgetEnabled,
     );
   }
 }

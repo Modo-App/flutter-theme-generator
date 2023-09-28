@@ -22,33 +22,15 @@
       "name": "light",
       "colors": {
         "background": "white",
-        "primary": "green",
-        "error": "red"
-      }
-    },
-    "Halloween": {
-      "name": "halloween",
-      "is_dark": true,
-      "colors": {
-        "background": "black",
-        "primary": "orange",
-        "error": "red"
-      }
-    },
-    "XMasTheme": {
-      "name": "xmas",
-      "is_dark": false,
-      "colors": {
-        "background": "white",
-        "primary": "#FFFF0000",
-        "error": "0xFF00FF00"
+        "primary": "0xFF00FF00",
+        "error": "#FFFF0000"
       }
     }
   },
   "extensions": {
     "buildContext": {
       "enabled": true,
-      "field_name": "modoTheme"
+      "field_name": "appTheme"
     },
     "themeResponsiveWidget": {
       "enabled": true
