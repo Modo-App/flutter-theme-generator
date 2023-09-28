@@ -59,7 +59,7 @@ class ThemeClassGenerator {
 
   void _generateClassPart(StringBuffer buffer) {
     buffer.writeln("""
-  ModoTheme._() {
+  $className._() {
     WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged = () {
       if (!_isSystemTheme) return;
       changeTheme(${className}Mode.system);
@@ -67,7 +67,6 @@ class ThemeClassGenerator {
   }
 
   bool _isSystemTheme = false;
-
   ThemeData _currentThemeData = dark;
 
   ThemeData get currentThemeData => _currentThemeData;
