@@ -76,9 +76,12 @@ class ThemeResponsive extends StatelessWidget {
 
   static Extensions parse(Map<String, dynamic> extensions, List<ThemeClass> themes) {
     var data = extensions.isEmpty ? {"buildContext": {}, "themeResponsiveWidget": {}} : extensions;
-    bool buildContextEnabled = data["buildContext"]["enabled"] ?? false;
-    String buildContextFieldName = data["buildContext"]["field_name"] ?? "theme";
-    bool themeResponsiveEnabled = data["themeResponsiveWidget"]["enabled"] ?? false;
+    var buildContext = data.isEmpty ? {} : data["buildContext"] ?? {};
+    var themeResponsiveWidget = data.isEmpty ? {} : data["themeResponsiveWidget"] ?? {};
+
+    bool buildContextEnabled = buildContext["enabled"] ?? false;
+    String buildContextFieldName = buildContext["field_name"] ?? "theme";
+    bool themeResponsiveEnabled = themeResponsiveWidget["enabled"] ?? false;
     return Extensions._(
       buildContextEnabled: buildContextEnabled,
       buildContextFieldName: buildContextFieldName,
