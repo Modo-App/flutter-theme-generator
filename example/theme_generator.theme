@@ -48,7 +48,10 @@
   "extensions": {
     "buildContext": {
       "enabled": true,
-      "field_name": "appTheme"
+      "field_name": "modoTheme"
+    },
+    "themeResponsiveWidget": {
+      "enabled": true
     }
   }
 }

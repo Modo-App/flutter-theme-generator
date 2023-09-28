@@ -1,19 +1,74 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-abstract class AppTheme {
+class AppTheme extends ChangeNotifier {
   static final dark = ThemeData.dark().copyWith(extensions: [DarkTheme.get]);
   static final light = ThemeData.light().copyWith(extensions: [LightTheme.get]);
   static final halloween = ThemeData.dark().copyWith(extensions: [Halloween.get]);
   static final xmas = ThemeData.light().copyWith(extensions: [XMasTheme.get]);
+
+  static List<ThemeData> get themes =>
+      [
+        dark,
+        light,
+        halloween,
+        xmas,
+      ];
+
+  static void changeTheme(AppThemeMode mode) {
+    AppTheme instance = AppTheme.instance;
+    instance._currentThemeData = _dataFromMode(mode);
+    instance._isSystemTheme = mode == AppThemeMode.system;
+    instance.notifyListeners();
+  }
+
+  static ThemeData _dataFromMode(AppThemeMode mode) {
+    if (mode == AppThemeMode.dark) return dark;
+    if (mode == AppThemeMode.light) return light;
+    if (mode == AppThemeMode.halloween) return halloween;
+    if (mode == AppThemeMode.xmas) return xmas;
+
+    var brightness = WidgetsBinding.instance.platformDispatcher.platformBrightness;
+    return themes.firstWhere((theme) => theme.brightness == brightness, orElse: () => themes.first);
+  }
+
+  ModoTheme._() {
+    WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged = () {
+      if (!_isSystemTheme) return;
+      changeTheme(AppThemeMode.system);
+    };
+  }
+
+  bool _isSystemTheme = false;
+
+  ThemeData _currentThemeData = dark;
+
+  ThemeData get currentThemeData => _currentThemeData;
+
+  static AppTheme? _instance;
+
+  static AppTheme get instance {
+    _instance ??= AppTheme._();
+    return _instance!;
+  }
+
+}
+
+enum AppThemeMode {
+  system,
+  dark,
+  light,
+  halloween,
+  xmas,
 }
 
 class DarkTheme extends AppThemeData {
   DarkTheme._()
       : super(
-          background: Colors.black,
-          primary: Colors.blue,
-          error: Colors.red,
-        );
+    background: Colors.black,
+    primary: Colors.blue,
+    error: Colors.red,
+  );
 
   static final get = DarkTheme._();
 }
@@ -21,10 +76,10 @@ class DarkTheme extends AppThemeData {
 class LightTheme extends AppThemeData {
   LightTheme._()
       : super(
-          background: Colors.white,
-          primary: Colors.green,
-          error: Colors.red,
-        );
+    background: Colors.white,
+    primary: Colors.green,
+    error: Colors.red,
+  );
 
   static final get = LightTheme._();
 }
@@ -32,10 +87,10 @@ class LightTheme extends AppThemeData {
 class Halloween extends AppThemeData {
   Halloween._()
       : super(
-          background: Colors.black,
-          primary: Colors.orange,
-          error: Colors.red,
-        );
+    background: Colors.black,
+    primary: Colors.orange,
+    error: Colors.red,
+  );
 
   static final get = Halloween._();
 }
@@ -43,10 +98,10 @@ class Halloween extends AppThemeData {
 class XMasTheme extends AppThemeData {
   XMasTheme._()
       : super(
-          background: Colors.white,
-          primary: const Color(0xFFFF0000),
-          error: const Color(0xFF00FF00),
-        );
+    background: Colors.white,
+    primary: const Color(0xFFFF0000),
+    error: const Color(0xFF00FF00),
+  );
 
   static final get = XMasTheme._();
 }
@@ -87,8 +142,30 @@ class AppThemeData extends ThemeExtension<AppThemeData> {
   }
 }
 
+typedef ThemeBuilder = Widget Function(BuildContext context, ThemeData currentTheme);
+
+class ThemeResponsive extends StatelessWidget {
+  final ThemeBuilder builder;
+
+  const ThemeResponsive({Key? key, required this.builder}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider.value(
+      value: AppTheme.instance,
+      child: Consumer<AppTheme>(
+        builder: (BuildContext context, AppTheme value, Widget? child) {
+          return builder(context, value.currentThemeData);
+        },
+      ),
+    );
+  }
+}
+
 extension BuildContextExtensions on BuildContext {
-  AppThemeData get appTheme => Theme.of(this).extension<AppThemeData>() ?? DarkTheme.get;
+  AppThemeData get modoTheme => Theme.of(this).extension<AppThemeData>() ?? DarkTheme.get;
+
+  void changeTheme(AppThemeMode mode) => AppTheme.changeTheme(mode);
 }
 
 extension _ColorLerpExtension on Color {
