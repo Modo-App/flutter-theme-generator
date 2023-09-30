@@ -150,8 +150,8 @@ extension BuildContextExtensions on BuildContext {
   void changeTheme(AppThemeMode mode) => AppTheme.changeTheme(mode);
 }
 
-extension _ColorLerpExtension on Color {
-  Color lerp(Color to, double t) {
-    return Color.lerp(this, to, t)!;
-  }
+extension ColorsExtension on Color {
+  Color lerp(Color to, double t) =>  Color.lerp(this, to, t)!;
+
+  MaterialStateProperty<Color> get materialProperty => MaterialStateProperty.all<Color>(this);
 }

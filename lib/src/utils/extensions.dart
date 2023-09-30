@@ -6,11 +6,13 @@ class Extensions {
     this.buildContextEnabled = false,
     this.buildContextFieldName = "theme",
     this.themeResponsiveWidgetEnabled = true,
+    this.colorMaterialPropertyEnabled = true,
   });
 
   final bool buildContextEnabled;
   final String buildContextFieldName;
   final bool themeResponsiveWidgetEnabled;
+  final bool colorMaterialPropertyEnabled;
 
   void generateBuildContextExtension(
     StringBuffer buffer,
@@ -31,13 +33,14 @@ class Extensions {
     buffer.writeln();
   }
 
-  String generateColorExtension() {
-    return """
-extension _ColorLerpExtension on Color {
-  Color lerp(Color to, double t) {
-    return Color.lerp(this, to, t)!;
-  }
-}""";
+  void generateColorExtension(StringBuffer buffer) {
+    buffer.writeln("extension ColorsExtension on Color {");
+    buffer.writeln("  Color lerp(Color to, double t) =>  Color.lerp(this, to, t)!;");
+    if (colorMaterialPropertyEnabled) {
+      buffer.writeln();
+      buffer.writeln("  MaterialStateProperty<Color> get materialProperty => MaterialStateProperty.all<Color>(this);");
+    }
+    buffer.writeln("}");
   }
 
   void generateImports(StringBuffer buffer) {
@@ -78,14 +81,17 @@ class ThemeResponsive extends StatelessWidget {
     var data = extensions.isEmpty ? {"buildContext": {}, "themeResponsiveWidget": {}} : extensions;
     var buildContext = data.isEmpty ? {} : data["buildContext"] ?? {};
     var themeResponsiveWidget = data.isEmpty ? {} : data["themeResponsiveWidget"] ?? {};
+    var colorMaterialProperty = data.isEmpty ? {} : data["colorMaterialProperty"] ?? {};
 
     bool buildContextEnabled = buildContext["enabled"] ?? false;
     String buildContextFieldName = buildContext["field_name"] ?? "theme";
     bool themeResponsiveWidgetEnabled = themeResponsiveWidget["enabled"] ?? true;
+    bool colorMaterialPropertyEnabled = colorMaterialProperty["enabled"] ?? true;
     return Extensions._(
       buildContextEnabled: buildContextEnabled,
       buildContextFieldName: buildContextFieldName,
       themeResponsiveWidgetEnabled: themeResponsiveWidgetEnabled,
+      colorMaterialPropertyEnabled: colorMaterialPropertyEnabled,
     );
   }
 }

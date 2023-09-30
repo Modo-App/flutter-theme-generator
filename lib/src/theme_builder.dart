@@ -56,7 +56,7 @@ import 'package:flutter/material.dart';""");
     extensions.generateTypeDefs(buffer);
     extensions.generateThemeResponsiveWidget(buffer, themeClassName);
     extensions.generateBuildContextExtension(buffer, themes, themeData, themeClassName);
-    buffer.writeln(extensions.generateColorExtension());
+    extensions.generateColorExtension(buffer);
     return buffer.toString();
   }
 }
