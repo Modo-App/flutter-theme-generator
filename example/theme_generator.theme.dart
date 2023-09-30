@@ -63,6 +63,9 @@ class DarkTheme extends AppThemeData {
           borderRadius: 8,
         );
 
+  @override
+  bool get isDark => true;
+
   static final get = DarkTheme._();
 }
 
@@ -90,6 +93,8 @@ class AppThemeData extends ThemeExtension<AppThemeData> {
   final Color primary;
   final Color error;
   final double borderRadius;
+
+  bool get isDark => false;
 
   @override
   ThemeExtension<AppThemeData> copyWith({

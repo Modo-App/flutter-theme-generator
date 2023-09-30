@@ -27,7 +27,8 @@ class ThemeDataClass {
     for (var double in doubles) {
       buffer.writeln("  final double $double;");
     }
-
+    buffer.writeln();
+    buffer.writeln("  bool get isDark => false;");
     buffer.writeln();
     buffer.writeln("  @override");
     buffer.writeln("  ThemeExtension<$className> copyWith({");

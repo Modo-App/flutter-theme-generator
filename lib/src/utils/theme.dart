@@ -32,6 +32,11 @@ class ThemeClass {
     });
 
     buffer.writeln("        );");
+    if (isDark) {
+      buffer.writeln();
+      buffer.writeln("  @override");
+      buffer.writeln("  bool get isDark => true;");
+    }
     buffer.writeln();
     buffer.writeln("  static final get = $className._();");
     buffer.writeln("}");
