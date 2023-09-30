@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -58,6 +60,7 @@ class DarkTheme extends AppThemeData {
           background: Colors.black,
           primary: Colors.blue,
           error: Colors.red,
+          borderRadius: 8,
         );
 
   static final get = DarkTheme._();
@@ -69,6 +72,7 @@ class LightTheme extends AppThemeData {
           background: Colors.white,
           primary: const Color(0xFF00FF00),
           error: const Color(0xFFFF0000),
+          borderRadius: 10,
         );
 
   static final get = LightTheme._();
@@ -79,22 +83,26 @@ class AppThemeData extends ThemeExtension<AppThemeData> {
     required this.background,
     required this.primary,
     required this.error,
+    required this.borderRadius,
   });
 
   final Color background;
   final Color primary;
   final Color error;
+  final double borderRadius;
 
   @override
   ThemeExtension<AppThemeData> copyWith({
     Color? background,
     Color? primary,
     Color? error,
+    double? borderRadius,
   }) =>
       AppThemeData(
         background: background ?? this.background,
         primary: primary ?? this.primary,
         error: error ?? this.error,
+        borderRadius: borderRadius ?? this.borderRadius,
       );
 
   @override
@@ -106,6 +114,7 @@ class AppThemeData extends ThemeExtension<AppThemeData> {
       background: background.lerp(other.background, t),
       primary: primary.lerp(other.primary, t),
       error: error.lerp(other.error, t),
+      borderRadius: lerpDouble(borderRadius, other.borderRadius, t)!,
     );
   }
 }

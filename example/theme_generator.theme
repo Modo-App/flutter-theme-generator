@@ -6,6 +6,9 @@
       "background",
       "primary",
       "error"
+    ],
+    "double_fields": [
+      "borderRadius"
     ]
   },
   "themes": {
@@ -16,6 +19,9 @@
         "background": "black",
         "primary": "blue",
         "error": "red"
+      },
+      "doubles": {
+        "borderRadius": 8
       }
     },
     "LightTheme": {
@@ -24,6 +30,9 @@
         "background": "white",
         "primary": "0xFF00FF00",
         "error": "#FFFF0000"
+      },
+      "doubles": {
+        "borderRadius": 10
       }
     }
   },

@@ -1,10 +1,17 @@
 class ThemeClass {
-  ThemeClass({required this.className, required this.name, required this.isDark, required this.colors});
+  ThemeClass._({
+    required this.className,
+    required this.name,
+    required this.isDark,
+    required this.colors,
+    required this.doubles,
+  });
 
   final String className;
   final String name;
   final bool isDark;
   final Map<String, String> colors;
+  final Map<String, String> doubles;
 
   String generateThemeGetter() {
     return "  static final $name = ThemeData.${isDark ? "dark" : "light"}().copyWith(extensions: [$className.get]);";
@@ -18,6 +25,10 @@ class ThemeClass {
 
     colors.forEach((key, value) {
       buffer.writeln("          $key: ${_parseColor(value)},");
+    });
+
+    doubles.forEach((key, value) {
+      buffer.writeln("          $key: $value,");
     });
 
     buffer.writeln("        );");
@@ -40,12 +51,16 @@ class ThemeClass {
       Map<String, dynamic> colors = value["colors"] ?? {};
       Map<String, String> stringColors = colors.map((key, value) => MapEntry(key, value.toString()));
 
+      Map<String, dynamic> doubles = value["doubles"] ?? {};
+      Map<String, String> stringDoubles = doubles.map((key, value) => MapEntry(key, value.toString()));
+
       output.add(
-        ThemeClass(
+        ThemeClass._(
           className: key,
           name: value["name"] ?? key,
           isDark: value["is_dark"] ?? false,
           colors: stringColors,
+          doubles: stringDoubles,
         ),
       );
     });

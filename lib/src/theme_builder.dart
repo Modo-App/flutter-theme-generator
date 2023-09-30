@@ -41,7 +41,10 @@ class ThemeBuilder implements Builder {
     Extensions extensions,
   ) {
     StringBuffer buffer = StringBuffer();
-    buffer.writeln("import 'package:flutter/material.dart';");
+    buffer.writeln("""
+import 'dart:ui';
+
+import 'package:flutter/material.dart';""");
     extensions.generateImports(buffer);
     buffer.writeln();
     buffer.writeln(ThemeClassGenerator(themeClassName, themes).generateClass());
