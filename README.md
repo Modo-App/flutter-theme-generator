@@ -32,13 +32,16 @@ It should look something like this:
 
 ```yaml
 {
-  "theme_name": "ModoTheme",
+  "theme_name": "AppTheme",
   "theme_data": {
-    "name": "ModoThemeData",
+    "name": "AppThemeData",
     "color_fields": [
       "background",
       "primary",
       "error"
+    ],
+    "double_fields": [
+      "borderRadius"
     ]
   },
   "themes": {
@@ -49,6 +52,9 @@ It should look something like this:
         "background": "black",
         "primary": "blue",
         "error": "red"
+      },
+      "doubles": {
+        "borderRadius": 8
       }
     },
     "LightTheme": {
@@ -57,6 +63,9 @@ It should look something like this:
         "background": "white",
         "primary": "0xFF00FF00",
         "error": "#FFFF0000"
+      },
+      "doubles": {
+        "borderRadius": 10
       }
     }
   },
@@ -66,6 +75,9 @@ It should look something like this:
       "field_name": "appTheme"
     },
     "themeResponsiveWidget": {
+      "enabled": true
+    },
+    "colorMaterialProperty": {
       "enabled": true
     }
   }
@@ -85,10 +97,11 @@ use `dart run build_runner watch`to automatically regenerate the dart file if yo
 
 ### Theme data
 
-| Value        | Description                                                                                                                | Type        | 
-|--------------|----------------------------------------------------------------------------------------------------------------------------|-------------| 
-| name         | The class name for the flutter `ThemeExtension`                                                                            | String      |
-| color_fields | A list of flutter `Color` fields which can be accessed in your theme.<br>Each string in this list represents a field name. | String list |
+| Value         | Description                                                                                                                | Type        | 
+|---------------|----------------------------------------------------------------------------------------------------------------------------|-------------| 
+| name          | The class name for the flutter `ThemeExtension`                                                                            | String      |
+| color_fields  | A list of flutter `Color` fields which can be accessed in your theme.<br>Each string in this list represents a field name. | String list |
+| double_fields | A list of `double` fields which can be accessed in your theme.<br>Each string in this list represents a field name.        | String list |
 
 ### Themes
 
@@ -97,13 +110,14 @@ corresponding class that will be generated.
 
 The object should have following key-value pairs:
 
-| Value                  | Description                                                                                                                               | Type    | 
-|------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|---------| 
-| name                   | The name of the getter which will give you access to the extension through the `theme class`                                              | String  |
-| is_dark<br>\<Optional> | If this is set to true, the generator will use `ThemeData.dark()` as a template, otherwise it will use `ThemeData.light()` as a template. | boolean |
-| colors                 | This map will contain the `Color` field name with the associated color value.                                                             | Map     |
+| Value                  | Description                                                                                                                                                                                                                                                                                                                                                     | Type    | 
+|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------| 
+| name                   | The name of the getter which will give you access to the extension through the `theme class`                                                                                                                                                                                                                                                                    | String  |
+| is_dark<br>\<Optional> | If this is set to true, the generator will use `ThemeData.dark()` as a template, otherwise it will use `ThemeData.light()` as a template.<br>Furthermore, if this value is set to true, the `isDark` getter for this theme will return true, otherwise it will return false. This can be used to check if the current active theme is a dark mode theme or not. | boolean |
+| colors                 | This map will contain the `Color` field name with the associated color value.                                                                                                                                                                                                                                                                                   | Map     |
+| doubles                | This map will contain the `double` field name with the associated double value.                                                                                                                                                                                                                                                                                 | Map     |
 
-#### Colors - Themes
+#### Themes - colors
 
 Example `colors` map for the `theme` object.
 
@@ -119,6 +133,16 @@ If the string starts with a `#` or with `0x` the following hex value will be use
 one of those symbols, the generator will take the value and add `Colors.` as a prefix to it. This will allow you to
 access fields from the flutter `Colors` class.
 
+#### Themes - doubles
+
+Example `doubles` map for the `theme` object.
+
+```yaml
+"doubles": {
+  "borderRadius": "10"
+}
+```
+
 ### Extensions
 
 The generator has also the option to add extensions, which allow you to add optional functionality. To use this, just
@@ -128,6 +152,7 @@ add an object called `extensions` to your `.theme` file.
 |--------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
 | buildContext<br>\<Optional>          | This extension gives you an easier access to your themes using `BuildContext`.                                                                                                 | Map  |
 | themeResponsiveWidget<br>\<Optional> | This extension adds a widget which gives you a simple way to switch between themes. To use this extension the [provider package](https://pub.dev/packages/provider) is needed. | Map  |
+| colorMaterialProperty<br>\<Optional> | This extension adds a getter to the flutter `Color` class to get the `MaterialStateProperty<Color>` value of a color.                                                          | Map  |
 
 #### Extension - buildContext
 
@@ -194,6 +219,20 @@ or if you are enabling the `buildContext` extension you can access the `changeTh
 `context.changeTheme(AppThemeMode.system);`
 </details>
 
+#### Extension - colorMaterialProperty
+
+The colorMaterialProperty extension is turned on by default.
+
+| Value   | Description                                                            | Type    |
+|---------|------------------------------------------------------------------------|---------|
+| enabled | When set to true, the extension will be generated. Defaults to `true`. | boolean |
+
+<details>
+    <summary>Usage</summary>
+    <h6>Getting MaterialPropertyState of a color</h6>
+    <code>Colors.red.materialProperty;</code>
+</details>
+
 ## ThemeModes
 
 The generator will also create an enum which will be named `<theme_name>Mode`. This enum class will have following
@@ -225,6 +264,8 @@ correct brightness.
   <summary>Click me</summary>
 
 ```dart
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -286,7 +327,11 @@ class DarkTheme extends AppThemeData {
     background: Colors.black,
     primary: Colors.blue,
     error: Colors.red,
+    borderRadius: 8,
   );
+
+  @override
+  bool get isDark => true;
 
   static final get = DarkTheme._();
 }
@@ -297,6 +342,7 @@ class LightTheme extends AppThemeData {
     background: Colors.white,
     primary: const Color(0xFF00FF00),
     error: const Color(0xFFFF0000),
+    borderRadius: 10,
   );
 
   static final get = LightTheme._();
@@ -307,22 +353,28 @@ class AppThemeData extends ThemeExtension<AppThemeData> {
     required this.background,
     required this.primary,
     required this.error,
+    required this.borderRadius,
   });
 
   final Color background;
   final Color primary;
   final Color error;
+  final double borderRadius;
+
+  bool get isDark => false;
 
   @override
   ThemeExtension<AppThemeData> copyWith({
     Color? background,
     Color? primary,
     Color? error,
+    double? borderRadius,
   }) =>
       AppThemeData(
         background: background ?? this.background,
         primary: primary ?? this.primary,
         error: error ?? this.error,
+        borderRadius: borderRadius ?? this.borderRadius,
       );
 
   @override
@@ -334,6 +386,7 @@ class AppThemeData extends ThemeExtension<AppThemeData> {
       background: background.lerp(other.background, t),
       primary: primary.lerp(other.primary, t),
       error: error.lerp(other.error, t),
+      borderRadius: lerpDouble(borderRadius, other.borderRadius, t)!,
     );
   }
 }
@@ -359,15 +412,15 @@ class ThemeResponsive extends StatelessWidget {
 }
 
 extension BuildContextExtensions on BuildContext {
-  AppThemeData get theme => Theme.of(this).extension<AppThemeData>() ?? DarkTheme.get;
+  AppThemeData get appTheme => Theme.of(this).extension<AppThemeData>() ?? DarkTheme.get;
 
   void changeTheme(AppThemeMode mode) => AppTheme.changeTheme(mode);
 }
 
-extension _ColorLerpExtension on Color {
-  Color lerp(Color to, double t) {
-    return Color.lerp(this, to, t)!;
-  }
+extension ColorsExtension on Color {
+  Color lerp(Color to, double t) => Color.lerp(this, to, t)!;
+
+  MaterialStateProperty<Color> get materialProperty => MaterialStateProperty.all<Color>(this);
 }
 
 ```

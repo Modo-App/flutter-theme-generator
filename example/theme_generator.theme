@@ -43,6 +43,9 @@
     },
     "themeResponsiveWidget": {
       "enabled": true
+    },
+    "colorMaterialProperty": {
+      "enabled": true
     }
   }
 }
