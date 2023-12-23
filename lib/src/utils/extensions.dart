@@ -28,7 +28,7 @@ class Extensions {
 
     buffer.writeln("extension BuildContextExtensions on BuildContext {");
     buffer.writeln(
-        "  ${themeDataClass.className} get $buildContextFieldName => Theme.of(this).extension<${themeDataClass.className}>() ?? ${fallbackTheme.className}.get;");
+        "  ${themeDataClass.className} get $buildContextFieldName => Theme.of(this).extension<${themeDataClass.className}>() ?? ${fallbackTheme.className}.get();");
     buffer.writeln();
     buffer.writeln("  void changeTheme(${themeClassName}Mode mode) => $themeClassName.changeTheme(mode);");
     buffer.writeln("}");
@@ -60,12 +60,6 @@ class Extensions {
     buffer.writeln("import 'package:provider/provider.dart';");
   }
 
-  void generateTypeDefs(StringBuffer buffer) {
-    if (!themeResponsiveWidgetEnabled) return;
-    buffer.writeln("typedef ThemeBuilder = Widget Function(BuildContext context, ThemeData currentTheme);");
-    buffer.writeln();
-  }
-
   void generateThemeResponsiveWidget(StringBuffer buffer, String themeClassName) {
     if (!themeResponsiveWidgetEnabled) return;
     buffer.writeln("""
@@ -80,7 +74,7 @@ class ThemeResponsive extends StatelessWidget {
       value: $themeClassName.instance,
       child: Consumer<$themeClassName>(
         builder: (BuildContext context, $themeClassName value, Widget? child) {
-          return builder(context, value.currentThemeData);
+          return builder(context, value.currentThemeData());
         },
       ),
     );

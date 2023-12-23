@@ -3,11 +3,14 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AppTheme extends ChangeNotifier {
-  static final dark = ThemeData.dark().copyWith(extensions: [DarkTheme.get]);
-  static final light = ThemeData.light().copyWith(extensions: [LightTheme.get]);
+typedef ThemeDataFunc = ThemeData Function();
+typedef ThemeBuilder = Widget Function(BuildContext context, ThemeData currentTheme);
 
-  static List<ThemeData> get themes => [
+class AppTheme extends ChangeNotifier {
+  static ThemeDataFunc dark = () => ThemeData.dark().copyWith(extensions: [DarkTheme.get()]);
+  static ThemeDataFunc light = () => ThemeData.light().copyWith(extensions: [LightTheme.get()]);
+
+  static List<ThemeDataFunc> get themes => [
         dark,
         light,
       ];
@@ -19,12 +22,12 @@ class AppTheme extends ChangeNotifier {
     instance.notifyListeners();
   }
 
-  static ThemeData _dataFromMode(AppThemeMode mode) {
+  static ThemeDataFunc _dataFromMode(AppThemeMode mode) {
     if (mode == AppThemeMode.dark) return dark;
     if (mode == AppThemeMode.light) return light;
 
     var brightness = WidgetsBinding.instance.platformDispatcher.platformBrightness;
-    return themes.firstWhere((theme) => theme.brightness == brightness, orElse: () => themes.first);
+    return themes.firstWhere((theme) => theme().brightness == brightness, orElse: () => themes.first);
   }
 
   AppTheme._() {
@@ -35,9 +38,9 @@ class AppTheme extends ChangeNotifier {
   }
 
   bool _isSystemTheme = false;
-  ThemeData _currentThemeData = dark;
+  ThemeDataFunc _currentThemeData = dark;
 
-  ThemeData get currentThemeData => _currentThemeData;
+  ThemeData currentThemeData() => _currentThemeData();
 
   static AppTheme? _instance;
 
@@ -66,7 +69,7 @@ class DarkTheme extends AppThemeData {
   @override
   bool get isDark => true;
 
-  static final get = DarkTheme._();
+  static get() => DarkTheme._();
 }
 
 class LightTheme extends AppThemeData {
@@ -78,7 +81,7 @@ class LightTheme extends AppThemeData {
           borderRadius: 10,
         );
 
-  static final get = LightTheme._();
+  static get() => LightTheme._();
 }
 
 class AppThemeData extends ThemeExtension<AppThemeData> {
@@ -124,8 +127,6 @@ class AppThemeData extends ThemeExtension<AppThemeData> {
   }
 }
 
-typedef ThemeBuilder = Widget Function(BuildContext context, ThemeData currentTheme);
-
 class ThemeResponsive extends StatelessWidget {
   final ThemeBuilder builder;
 
@@ -137,7 +138,7 @@ class ThemeResponsive extends StatelessWidget {
       value: AppTheme.instance,
       child: Consumer<AppTheme>(
         builder: (BuildContext context, AppTheme value, Widget? child) {
-          return builder(context, value.currentThemeData);
+          return builder(context, value.currentThemeData());
         },
       ),
     );
@@ -145,7 +146,7 @@ class ThemeResponsive extends StatelessWidget {
 }
 
 extension BuildContextExtensions on BuildContext {
-  AppThemeData get appTheme => Theme.of(this).extension<AppThemeData>() ?? DarkTheme.get;
+  AppThemeData get appTheme => Theme.of(this).extension<AppThemeData>() ?? DarkTheme.get();
 
   void changeTheme(AppThemeMode mode) => AppTheme.changeTheme(mode);
 }

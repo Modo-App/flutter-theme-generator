@@ -7,6 +7,7 @@ import 'package:theme_generator/src/utils/theme.dart';
 import 'package:theme_generator/src/utils/theme_class_generator.dart';
 import 'package:theme_generator/src/utils/theme_data.dart';
 import 'package:theme_generator/src/utils/theme_mode.dart';
+import 'package:theme_generator/src/utils/typedefs.dart';
 
 class ThemeBuilder implements Builder {
   const ThemeBuilder(this.options);
@@ -24,10 +25,14 @@ class ThemeBuilder implements Builder {
     List<ThemeClass> themes = ThemeClass.parseThemes(data["themes"]);
     Extensions extensions = Extensions.parse(data["extensions"] ?? {}, themes);
     ThemeModeClass themeModes = ThemeModeClass(themeClassName: themeClassName, themes: themes);
+    TypeDefGenerator typeDefGenerator = TypeDefGenerator(
+      themeResponsiveWidgetEnabled: extensions.themeResponsiveWidgetEnabled,
+    );
 
     //TODO Add safe and load function
 
-    await buildStep.writeAsString(output, _generateFile(themeClassName, themeData, themeModes, themes, extensions));
+    await buildStep.writeAsString(
+        output, _generateFile(themeClassName, themeData, themeModes, themes, extensions, typeDefGenerator));
   }
 
   @override
@@ -41,6 +46,7 @@ class ThemeBuilder implements Builder {
     ThemeModeClass themeModeClass,
     List<ThemeClass> themes,
     Extensions extensions,
+    TypeDefGenerator typeDefGenerator,
   ) {
     StringBuffer buffer = StringBuffer();
     buffer.writeln("""
@@ -49,6 +55,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';""");
     extensions.generateImports(buffer);
     buffer.writeln();
+    typeDefGenerator.generateThemeModes(buffer);
     buffer.writeln(ThemeClassGenerator(themeClassName, themes).generateClass());
     buffer.writeln(themeModeClass.generateThemeModes());
     for (var theme in themes) {
@@ -56,7 +63,6 @@ import 'package:flutter/material.dart';""");
     }
     buffer.writeln(themeData.generateClass());
     extensions
-      ..generateTypeDefs(buffer)
       ..generateThemeResponsiveWidget(buffer, themeClassName)
       ..generateBuildContextExtension(buffer, themes, themeData, themeClassName)
       ..generateColorExtension(buffer)

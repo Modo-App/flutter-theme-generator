@@ -14,7 +14,7 @@ class ThemeClass {
   final Map<String, String> doubles;
 
   String generateThemeGetter() {
-    return "  static final $name = ThemeData.${isDark ? "dark" : "light"}().copyWith(extensions: [$className.get]);";
+    return "  static ThemeDataFunc $name = () => ThemeData.${isDark ? "dark" : "light"}().copyWith(extensions: [$className.get()]);";
   }
 
   String generateThemeClass(String themeDataClassName) {
@@ -38,7 +38,7 @@ class ThemeClass {
       buffer.writeln("  bool get isDark => true;");
     }
     buffer.writeln();
-    buffer.writeln("  static final get = $className._();");
+    buffer.writeln("  static get() => $className._();");
     buffer.writeln("}");
     return buffer.toString();
   }

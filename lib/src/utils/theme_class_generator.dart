@@ -29,7 +29,7 @@ class ThemeClassGenerator {
   }
 
   void _generateThemesGetter(StringBuffer buffer) {
-    buffer.writeln("  static List<ThemeData> get themes => [");
+    buffer.writeln("  static List<ThemeDataFunc> get themes => [");
     for (var theme in themes) {
       buffer.writeln("        ${theme.name},");
     }
@@ -46,14 +46,14 @@ class ThemeClassGenerator {
   }
 
   void _generateDataFromModeMethod(StringBuffer buffer) {
-    buffer.writeln("  static ThemeData _dataFromMode(${className}Mode mode) {");
+    buffer.writeln("  static ThemeDataFunc _dataFromMode(${className}Mode mode) {");
     for (var theme in themes) {
       buffer.writeln("    if (mode == ${className}Mode.${theme.name}) return ${theme.name};");
     }
     buffer.writeln();
     buffer.writeln("    var brightness = WidgetsBinding.instance.platformDispatcher.platformBrightness;");
     buffer.writeln(
-        "    return themes.firstWhere((theme) => theme.brightness == brightness, orElse: () => themes.first);");
+        "    return themes.firstWhere((theme) => theme().brightness == brightness, orElse: () => themes.first);");
     buffer.writeln("  }");
   }
 
@@ -67,9 +67,9 @@ class ThemeClassGenerator {
   }
 
   bool _isSystemTheme = false;
-  ThemeData _currentThemeData = dark;
+  ThemeDataFunc _currentThemeData = dark;
 
-  ThemeData get currentThemeData => _currentThemeData;
+  ThemeData currentThemeData() => _currentThemeData();
 
   static $className? _instance;
 
