@@ -7,12 +7,14 @@ class Extensions {
     this.buildContextFieldName = "theme",
     this.themeResponsiveWidgetEnabled = true,
     this.colorMaterialPropertyEnabled = true,
+    this.doubleAsRadiusEnabled = true,
   });
 
   final bool buildContextEnabled;
   final String buildContextFieldName;
   final bool themeResponsiveWidgetEnabled;
   final bool colorMaterialPropertyEnabled;
+  final bool doubleAsRadiusEnabled;
 
   void generateBuildContextExtension(
     StringBuffer buffer,
@@ -40,6 +42,16 @@ class Extensions {
       buffer.writeln();
       buffer.writeln("  MaterialStateProperty<Color> get materialProperty => MaterialStateProperty.all<Color>(this);");
     }
+    buffer.writeln("}");
+    buffer.writeln();
+  }
+
+  void generateDoubleAsRadiusExtension(StringBuffer buffer) {
+    if (!doubleAsRadiusEnabled) return;
+    buffer.writeln("extension DoubleAsRadiusExtension on double {");
+    buffer.writeln("  Radius asRadius() => Radius.circular(this);");
+    buffer.writeln();
+    buffer.writeln("  BorderRadius asBorderRadius() => BorderRadius.circular(this);");
     buffer.writeln("}");
   }
 
@@ -82,16 +94,19 @@ class ThemeResponsive extends StatelessWidget {
     var buildContext = data.isEmpty ? {} : data["buildContext"] ?? {};
     var themeResponsiveWidget = data.isEmpty ? {} : data["themeResponsiveWidget"] ?? {};
     var colorMaterialProperty = data.isEmpty ? {} : data["colorMaterialProperty"] ?? {};
+    var doubleAsRadius = data.isEmpty ? {} : data["doubleAsRadius"] ?? {};
 
     bool buildContextEnabled = buildContext["enabled"] ?? false;
     String buildContextFieldName = buildContext["field_name"] ?? "theme";
     bool themeResponsiveWidgetEnabled = themeResponsiveWidget["enabled"] ?? true;
     bool colorMaterialPropertyEnabled = colorMaterialProperty["enabled"] ?? true;
+    bool doubleAsRadiusEnabled = doubleAsRadius["enabled"] ?? true;
     return Extensions._(
       buildContextEnabled: buildContextEnabled,
       buildContextFieldName: buildContextFieldName,
       themeResponsiveWidgetEnabled: themeResponsiveWidgetEnabled,
       colorMaterialPropertyEnabled: colorMaterialPropertyEnabled,
+      doubleAsRadiusEnabled: doubleAsRadiusEnabled,
     );
   }
 }

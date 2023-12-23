@@ -25,6 +25,8 @@ class ThemeBuilder implements Builder {
     Extensions extensions = Extensions.parse(data["extensions"] ?? {}, themes);
     ThemeModeClass themeModes = ThemeModeClass(themeClassName: themeClassName, themes: themes);
 
+    //TODO Add safe and load function
+
     await buildStep.writeAsString(output, _generateFile(themeClassName, themeData, themeModes, themes, extensions));
   }
 
@@ -53,10 +55,12 @@ import 'package:flutter/material.dart';""");
       buffer.writeln(theme.generateThemeClass(themeData.className));
     }
     buffer.writeln(themeData.generateClass());
-    extensions.generateTypeDefs(buffer);
-    extensions.generateThemeResponsiveWidget(buffer, themeClassName);
-    extensions.generateBuildContextExtension(buffer, themes, themeData, themeClassName);
-    extensions.generateColorExtension(buffer);
+    extensions
+      ..generateTypeDefs(buffer)
+      ..generateThemeResponsiveWidget(buffer, themeClassName)
+      ..generateBuildContextExtension(buffer, themes, themeData, themeClassName)
+      ..generateColorExtension(buffer)
+      ..generateDoubleAsRadiusExtension(buffer);
     return buffer.toString();
   }
 }

@@ -46,6 +46,9 @@
     },
     "colorMaterialProperty": {
       "enabled": true
+    },
+    "doubleAsRadius": {
+      "enabled": true
     }
   }
 }

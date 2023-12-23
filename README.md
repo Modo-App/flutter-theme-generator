@@ -79,6 +79,9 @@ It should look something like this:
     },
     "colorMaterialProperty": {
       "enabled": true
+    },
+    "doubleAsRadius": {
+      "enabled": true
     }
   }
 }
@@ -153,6 +156,7 @@ add an object called `extensions` to your `.theme` file.
 | buildContext<br>\<Optional>          | This extension gives you an easier access to your themes using `BuildContext`.                                                                                                 | Map  |
 | themeResponsiveWidget<br>\<Optional> | This extension adds a widget which gives you a simple way to switch between themes. To use this extension the [provider package](https://pub.dev/packages/provider) is needed. | Map  |
 | colorMaterialProperty<br>\<Optional> | This extension adds a getter to the flutter `Color` class to get the `MaterialStateProperty<Color>` value of a color.                                                          | Map  |
+| doubleAsRadius<br>\<Optional>        | This extension adds getters for Radius#circular and BorderRadius#circular to the double class.                                                                                 | Map  |
 
 #### Extension - buildContext
 
@@ -233,6 +237,26 @@ The colorMaterialProperty extension is turned on by default.
     <code>Colors.red.materialProperty;</code>
 </details>
 
+#### Extension - doubleAsRadius
+
+The doubleAsRadius extension is turned on by default.
+
+| Value   | Description                                                            | Type    |
+|---------|------------------------------------------------------------------------|---------|
+| enabled | When set to true, the extension will be generated. Defaults to `true`. | boolean |
+
+<details>
+    <summary>Usage</summary>
+    <h6>Getting Radius.circular from double</h6>
+    <code>theme.borderRadius.asRadius();</code>
+    <br>
+    <code>15.0.asRadius();</code>
+    <h6>Getting BorderRadius.circular from double</h6>
+    <code>theme.borderRadius.asBorderRadius();</code>
+    <br>
+    <code>15.0.asBorderRadius();</code>
+</details>
+
 ## ThemeModes
 
 The generator will also create an enum which will be named `<theme_name>Mode`. This enum class will have following
@@ -273,11 +297,10 @@ class AppTheme extends ChangeNotifier {
   static final dark = ThemeData.dark().copyWith(extensions: [DarkTheme.get]);
   static final light = ThemeData.light().copyWith(extensions: [LightTheme.get]);
 
-  static List<ThemeData> get themes =>
-      [
-        dark,
-        light,
-      ];
+  static List<ThemeData> get themes => [
+    dark,
+    light,
+  ];
 
   static void changeTheme(AppThemeMode mode) {
     AppTheme instance = AppTheme.instance;
@@ -418,9 +441,15 @@ extension BuildContextExtensions on BuildContext {
 }
 
 extension ColorsExtension on Color {
-  Color lerp(Color to, double t) => Color.lerp(this, to, t)!;
+  Color lerp(Color to, double t) =>  Color.lerp(this, to, t)!;
 
   MaterialStateProperty<Color> get materialProperty => MaterialStateProperty.all<Color>(this);
+}
+
+extension DoubleAsRadiusExtension on double {
+  Radius asRadius() => Radius.circular(this);
+
+  BorderRadius asBorderRadius() => BorderRadius.circular(this);
 }
 
 ```
