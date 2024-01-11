@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 typedef ThemeDataFunc = ThemeData Function();
 typedef ThemeBuilder = Widget Function(BuildContext context, ThemeData currentTheme);
 
-class AppTheme extends ChangeNotifier {
+class AppTheme with ChangeNotifier {
   static ThemeDataFunc dark = () => ThemeData.dark().copyWith(extensions: [DarkTheme.get()]);
   static ThemeDataFunc light = () => ThemeData.light().copyWith(extensions: [LightTheme.get()]);
 

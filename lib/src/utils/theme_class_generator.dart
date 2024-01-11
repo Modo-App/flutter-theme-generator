@@ -8,7 +8,7 @@ class ThemeClassGenerator {
 
   String generateClass() {
     StringBuffer buffer = StringBuffer();
-    buffer.writeln("class $className extends ChangeNotifier {");
+    buffer.writeln("class $className with ChangeNotifier {");
     _generateThemeGetters(buffer);
     buffer.writeln();
     _generateThemesGetter(buffer);
