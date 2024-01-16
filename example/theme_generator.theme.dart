@@ -157,8 +157,8 @@ extension ColorsExtension on Color {
   MaterialStateProperty<Color> get materialProperty => MaterialStateProperty.all<Color>(this);
 }
 
-extension DoubleAsRadiusExtension on double {
-  Radius asRadius() => Radius.circular(this);
+extension NumberAsRadiusExtension on num {
+  Radius asRadius() => Radius.circular(toDouble());
 
-  BorderRadius asBorderRadius() => BorderRadius.circular(this);
+  BorderRadius asBorderRadius() => BorderRadius.circular(toDouble());
 }

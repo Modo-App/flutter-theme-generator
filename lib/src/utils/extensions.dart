@@ -48,10 +48,10 @@ class Extensions {
 
   void generateDoubleAsRadiusExtension(StringBuffer buffer) {
     if (!doubleAsRadiusEnabled) return;
-    buffer.writeln("extension DoubleAsRadiusExtension on double {");
-    buffer.writeln("  Radius asRadius() => Radius.circular(this);");
+    buffer.writeln("extension NumberAsRadiusExtension on num {");
+    buffer.writeln("  Radius asRadius() => Radius.circular(toDouble());");
     buffer.writeln();
-    buffer.writeln("  BorderRadius asBorderRadius() => BorderRadius.circular(this);");
+    buffer.writeln("  BorderRadius asBorderRadius() => BorderRadius.circular(toDouble());");
     buffer.writeln("}");
   }
 
