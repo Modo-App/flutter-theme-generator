@@ -297,6 +297,13 @@ typedef ThemeDataFunc = ThemeData Function();
 typedef ThemeBuilder = Widget Function(BuildContext context, ThemeData currentTheme);
 
 class AppTheme with ChangeNotifier {
+  AppTheme._() {
+    WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged = () {
+      if (!_isSystemTheme) return;
+      changeTheme(AppThemeMode.system);
+    };
+  }
+
   static ThemeDataFunc dark = () => ThemeData.dark().copyWith(extensions: [DarkTheme.get()]);
   static ThemeDataFunc light = () => ThemeData.light().copyWith(extensions: [LightTheme.get()]);
 
@@ -320,13 +327,6 @@ class AppTheme with ChangeNotifier {
     return themes.firstWhere((theme) => theme().brightness == brightness, orElse: () => themes.first);
   }
 
-  AppTheme._() {
-    WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged = () {
-      if (!_isSystemTheme) return;
-      changeTheme(AppThemeMode.system);
-    };
-  }
-
   bool _isSystemTheme = false;
   ThemeDataFunc _currentThemeData = dark;
 
@@ -338,7 +338,6 @@ class AppTheme with ChangeNotifier {
     _instance ??= AppTheme._();
     return _instance!;
   }
-
 }
 
 enum AppThemeMode {
@@ -442,7 +441,7 @@ extension BuildContextExtensions on BuildContext {
 }
 
 extension ColorsExtension on Color {
-  Color lerp(Color to, double t) =>  Color.lerp(this, to, t)!;
+  Color lerp(Color to, double t) => Color.lerp(this, to, t)!;
 
   WidgetStateProperty<Color> get materialProperty => WidgetStateProperty.all<Color>(this);
 }

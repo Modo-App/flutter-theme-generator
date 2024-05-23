@@ -9,6 +9,8 @@ class ThemeClassGenerator {
   String generateClass() {
     StringBuffer buffer = StringBuffer();
     buffer.writeln("class $className with ChangeNotifier {");
+    _generateConstructor(buffer);
+    buffer.writeln();
     _generateThemeGetters(buffer);
     buffer.writeln();
     _generateThemesGetter(buffer);
@@ -20,6 +22,16 @@ class ThemeClassGenerator {
     _generateClassPart(buffer);
     buffer.writeln("}");
     return buffer.toString();
+  }
+
+  void _generateConstructor(StringBuffer buffer) {
+    buffer.writeln("""
+  $className._() {
+    WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged = () {
+      if (!_isSystemTheme) return;
+      changeTheme(${className}Mode.system);
+    };
+  }""");
   }
 
   void _generateThemeGetters(StringBuffer buffer) {
@@ -59,13 +71,6 @@ class ThemeClassGenerator {
 
   void _generateClassPart(StringBuffer buffer) {
     buffer.writeln("""
-  $className._() {
-    WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged = () {
-      if (!_isSystemTheme) return;
-      changeTheme(${className}Mode.system);
-    };
-  }
-
   bool _isSystemTheme = false;
   ThemeDataFunc _currentThemeData = dark;
 
@@ -76,7 +81,6 @@ class ThemeClassGenerator {
   static $className get instance {
     _instance ??= $className._();
     return _instance!;
-  }
-""");
+  }""");
   }
 }

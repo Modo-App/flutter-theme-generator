@@ -37,7 +37,7 @@ class Extensions {
 
   void generateColorExtension(StringBuffer buffer) {
     buffer.writeln("extension ColorsExtension on Color {");
-    buffer.writeln("  Color lerp(Color to, double t) =>  Color.lerp(this, to, t)!;");
+    buffer.writeln("  Color lerp(Color to, double t) => Color.lerp(this, to, t)!;");
     if (colorMaterialPropertyEnabled) {
       buffer.writeln();
       buffer.writeln("  WidgetStateProperty<Color> get materialProperty => WidgetStateProperty.all<Color>(this);");
