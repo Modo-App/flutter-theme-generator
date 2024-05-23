@@ -154,7 +154,7 @@ extension BuildContextExtensions on BuildContext {
 extension ColorsExtension on Color {
   Color lerp(Color to, double t) =>  Color.lerp(this, to, t)!;
 
-  MaterialStateProperty<Color> get materialProperty => MaterialStateProperty.all<Color>(this);
+  WidgetStateProperty<Color> get materialProperty => WidgetStateProperty.all<Color>(this);
 }
 
 extension NumberAsRadiusExtension on num {

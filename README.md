@@ -155,7 +155,7 @@ add an object called `extensions` to your `.theme` file.
 |--------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
 | buildContext<br>\<Optional>          | This extension gives you an easier access to your themes using `BuildContext`.                                                                                                 | Map  |
 | themeResponsiveWidget<br>\<Optional> | This extension adds a widget which gives you a simple way to switch between themes. To use this extension the [provider package](https://pub.dev/packages/provider) is needed. | Map  |
-| colorMaterialProperty<br>\<Optional> | This extension adds a getter to the flutter `Color` class to get the `MaterialStateProperty<Color>` value of a color.                                                          | Map  |
+| colorMaterialProperty<br>\<Optional> | This extension adds a getter to the flutter `Color` class to get the `WidgetStateProperty<Color>` value of a color.                                                          | Map  |
 | doubleAsRadius<br>\<Optional>        | This extension adds getters for Radius#circular and BorderRadius#circular to the double class.                                                                                 | Map  |
 
 #### Extension - buildContext
@@ -444,7 +444,7 @@ extension BuildContextExtensions on BuildContext {
 extension ColorsExtension on Color {
   Color lerp(Color to, double t) =>  Color.lerp(this, to, t)!;
 
-  MaterialStateProperty<Color> get materialProperty => MaterialStateProperty.all<Color>(this);
+  WidgetStateProperty<Color> get materialProperty => WidgetStateProperty.all<Color>(this);
 }
 
 extension NumberAsRadiusExtension on num {

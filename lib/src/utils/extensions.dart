@@ -40,7 +40,7 @@ class Extensions {
     buffer.writeln("  Color lerp(Color to, double t) =>  Color.lerp(this, to, t)!;");
     if (colorMaterialPropertyEnabled) {
       buffer.writeln();
-      buffer.writeln("  MaterialStateProperty<Color> get materialProperty => MaterialStateProperty.all<Color>(this);");
+      buffer.writeln("  WidgetStateProperty<Color> get materialProperty => WidgetStateProperty.all<Color>(this);");
     }
     buffer.writeln("}");
     buffer.writeln();
